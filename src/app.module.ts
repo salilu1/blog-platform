@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-ioredis-yet';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 
 @Module({
@@ -22,6 +23,8 @@ import { UsersModule } from './modules/users/users.module';
     PrismaModule,
 
     UsersModule,
+
+    AuthModule,
   ],
 })
 export class AppModule {}

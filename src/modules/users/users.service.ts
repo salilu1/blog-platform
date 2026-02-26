@@ -8,25 +8,55 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-  const { firstName, lastName, email, password } = createUserDto;
+    const { firstName, lastName, email, password } = createUserDto;
 
-  const existingUser = await this.prisma.user.findUnique({
-    where: { email },
-  });
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
 
-  if (existingUser) {
-    throw new BadRequestException('Email already exists');
+    if (existingUser) {
+      throw new BadRequestException('Email already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await this.prisma.user.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+
+    return user;
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  async findAll() {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+  }
 
-  return this.prisma.user.create({
-    data: {
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    },
-  });
-}
+  async findByEmail(email: string) {
+    // Needed for login (includes password)
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
+  }
 }
