@@ -29,19 +29,32 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 model Post {
+  id          String     @id @default(uuid())
+  title       String
+  content     String
+  published   Boolean    @default(false)
+  authorId    String
+  author      User       @relation(fields: [authorId], references: [id])
+  comments    Comment[]
+  likes       Like[]     // likes for this post
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Like {
   id        String   @id @default(uuid())
-  title     String
-  content   String
-  published Boolean  @default(false)
-
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
-
-  comments  Comment[]
-  likes     Like[]
-
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id])
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id])
   createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
 }
 
 model Comment {
@@ -61,22 +74,6 @@ model Comment {
   likes     Like[]
 
   createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
-model Like {
-  id        String   @id @default(uuid())
-
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-
-  postId    String?
-  post      Post?    @relation(fields: [postId], references: [id])
-
-  commentId String?
-  comment   Comment? @relation(fields: [commentId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@unique([userId, postId])
-  @@unique([userId, commentId])
-}
