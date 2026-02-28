@@ -1,15 +1,20 @@
-import { IsString, IsNotEmpty, IsBoolean, IsOptional } from 'class-validator';
+// create-post.dto.ts
+import { IsString, IsOptional } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
-  @IsNotEmpty()
   title: string;
 
   @IsString()
-  @IsNotEmpty()
   content: string;
 
-  @IsBoolean()
   @IsOptional()
-  published?: boolean;
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  fileUrl?: string; // PDF file
 }
+
+// update-post.dto.ts

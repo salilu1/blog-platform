@@ -18,52 +18,44 @@ import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  // Create comment on post
+  /** Create comment or reply */
   @UseGuards(JwtAuthGuard)
   @Post('posts/:postId/comments')
-  create(
-    @Param('postId') postId: string,
-    @Body() dto: CreateCommentDto,
-    @Req() req,
-  ) {
+  async create(@Param('postId') postId: string, @Body() dto: CreateCommentDto, @Req() req) {
     return this.commentsService.create(postId, dto, req.user);
   }
 
-  // Get comments of a post (with nested replies)
+  /** Get all comments of a post */
   @Get('posts/:postId/comments')
-  findByPost(@Param('postId') postId: string) {
+  async findByPost(@Param('postId') postId: string) {
     return this.commentsService.findByPost(postId);
   }
 
-  // Update comment
+  /** Update a comment */
   @UseGuards(JwtAuthGuard)
   @Patch('comments/:id')
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateCommentDto,
-    @Req() req,
-  ) {
+  async update(@Param('id') id: string, @Body() dto: UpdateCommentDto, @Req() req) {
     return this.commentsService.update(id, dto, req.user);
   }
 
-  // Delete comment
+  /** Delete a comment */
   @UseGuards(JwtAuthGuard)
   @Delete('comments/:id')
-  remove(@Param('id') id: string, @Req() req) {
+  async remove(@Param('id') id: string, @Req() req) {
     return this.commentsService.remove(id, req.user);
   }
 
-  // Like comment
+  /** Toggle like/unlike on comment */
   @UseGuards(JwtAuthGuard)
   @Post('comments/:id/like')
-  like(@Param('id') id: string, @Req() req) {
-    return this.commentsService.likeComment(id, req.user);
+  async toggleLike(@Param('id') id: string, @Req() req) {
+    return this.commentsService.toggleLike(id, req.user);
   }
 
-  // Unlike comment
+  /** Remove like from comment */
   @UseGuards(JwtAuthGuard)
   @Post('comments/:id/unlike')
-  unlike(@Param('id') id: string, @Req() req) {
-    return this.commentsService.unlikeComment(id, req.user);
+  async unlike(@Param('id') id: string, @Req() req) {
+    return this.commentsService.unlike(id, req.user);
   }
 }

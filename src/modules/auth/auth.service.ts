@@ -10,6 +10,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // Validate user credentials
   async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) throw new UnauthorizedException('Invalid credentials');
@@ -22,10 +23,14 @@ export class AuthService {
     return result;
   }
 
+  // Login and return access token + user info
   async login(user: any) {
     const payload = { sub: user.id, email: user.email, role: user.role };
+    const access_token = this.jwtService.sign(payload);
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token,
+      user, // already stripped password from validateUser
     };
   }
 }
