@@ -113,7 +113,7 @@ export class PostsController {
 
   /** Toggle like/unlike for logged-in users */
   @UseGuards(JwtAuthGuard)
-  @HttpPost(':id/toggle-like')
+  @HttpPost(':id/like')
   toggleLike(@Param('id') id: string, @Req() req) {
     return this.postsService.toggleLike(id, req.user);
   }
