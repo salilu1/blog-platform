@@ -13,17 +13,22 @@ export class PostsService {
   constructor(private prisma: PrismaService) {}
 
   async findOne(id: string) {
-    const post = await this.prisma.post.findUnique({
-      where: { id },
-      include: {
-        author: true,
-        likes: true,
-        comments: { include: { author: true } },
+  const post = await this.prisma.post.findUnique({
+    where: { id },
+    include: {
+      author: true,
+      likes: true, // This is for the POST itself
+      comments: { 
+        include: { 
+          author: true, 
+          likes: true // ✅ ADD THIS LINE TO GET COMMENT LIKES
+        } 
       },
-    });
-    if (!post) throw new NotFoundException('Post not found');
-    return post;
-  }
+    },
+  });
+  if (!post) throw new NotFoundException('Post not found');
+  return post;
+}
 
   async findAll(skip = 0, take = 10, search?: string) {
     return this.prisma.post.findMany({
