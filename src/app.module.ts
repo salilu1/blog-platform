@@ -7,6 +7,8 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
+import { AdminModule } from './admin/admin.module';
+
 
 
 @Module({
@@ -31,6 +33,8 @@ import { CommentsModule } from './comments/comments.module';
     PostsModule,
 
     CommentsModule,
+
+    AdminModule,
   ],
 })
 export class AppModule {}
